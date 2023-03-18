@@ -30,7 +30,7 @@ Fuzz::~Fuzz(){
 
 void  Fuzz::SetGain(float _gain){
     
-    gain =  4 + pow(10.f, _gain*2); // 6 to 20 dB gain
+    gain =  pow(10.f, _gain*2); // 0 to 20 dB gain
 }
 
 float Fuzz::GetGain(){
