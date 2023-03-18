@@ -100,8 +100,8 @@ void Apsa23::setParameter (VstInt32 index, float value)
             break;
             
         case VDParam_Ambient:
-            O_Ambient.SetAmount( m_Ambient );
             m_Ambient = value;
+            O_Ambient.SetAmount( m_Ambient );
             break;
             
         case VDParam_Tone:
@@ -192,23 +192,40 @@ void Apsa23::getParameterDisplay (VstInt32 index, char* text)
 {
     switch (index) {
         case VDParam_Fuzz:
-            int2string( 1 + m_Fuzz*99, text, kVstMaxParamStrLen);
+            if(m_Fuzz == 0)
+                vst_strncpy( text, "ByPass", kVstMaxParamStrLen);
+            else
+                int2string(m_Fuzz*100, text, kVstMaxParamStrLen);
             break;
             
         case VDParam_Chorus:
-            int2string( 1 + m_Chorus*99, text, kVstMaxParamStrLen);
+            if(m_Chorus == 0)
+                vst_strncpy( text, "ByPass", kVstMaxParamStrLen);
+            else
+                int2string( m_Chorus*100, text, kVstMaxParamStrLen);
             break;
             
         case VDParam_AutoTremolo:
-            int2string( 1 + m_AutoTremolo*99, text, kVstMaxParamStrLen);
+            if(m_AutoTremolo == 0)
+                vst_strncpy( text, "ByPass", kVstMaxParamStrLen);
+            else
+                int2string(m_AutoTremolo*100, text, kVstMaxParamStrLen);
             break;
         
         case VDParam_Ambient:
-            int2string( 1 + m_Ambient*99, text, kVstMaxParamStrLen);
+            if(m_Ambient == 0)
+                vst_strncpy( text, "ByPass", kVstMaxParamStrLen);
+            else
+                int2string( m_Ambient*100, text, kVstMaxParamStrLen);
             break;
         
         case VDParam_Tone:
-            int2string( 1 + m_Tone*99, text, kVstMaxParamStrLen);
+            if(m_Tone == 0.5)
+                vst_strncpy( text, "ByPass", kVstMaxParamStrLen);
+            else if(m_Tone < 0.5) // LOW SHELF
+                int2string( (1.f-m_Tone*2.f)*100, text, kVstMaxParamStrLen);
+            else // HIGH SHELF
+                int2string( (m_Tone-0.5)*200, text, kVstMaxParamStrLen);
             break;
         
         case VDParam_DryWet:
