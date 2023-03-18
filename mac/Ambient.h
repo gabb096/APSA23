@@ -68,19 +68,20 @@ float Ambient::GetAmount(){
 float Ambient::ProcessSample(float _input){
     
     float output = 0.0;
-
-    /* 4 comb filters in parallel */
-    output =  processCombFilter(buffer_1, _input,  GAIN, sizeOfDelayLine_1, index_1) * 0.25;
-
-    output += processCombFilter(buffer_2, _input, -GAIN, sizeOfDelayLine_2, index_2) * 0.25;
-
-    output += processCombFilter(buffer_3, _input,  GAIN, sizeOfDelayLine_3, index_3) * 0.25;
-
-    output += processCombFilter(buffer_4, _input, -GAIN, sizeOfDelayLine_4, index_4) * 0.25;
-
-    output = saturation(output); // saturation and "gain control"
+    float input = amount * _input;
     
-    return output;
+    /* 4 comb filters in parallel */
+    output =  processCombFilter(buffer_1, input,  GAIN, sizeOfDelayLine_1, index_1);
+
+    output += processCombFilter(buffer_2, input, -GAIN, sizeOfDelayLine_2, index_2);
+
+    output += processCombFilter(buffer_3, input,  GAIN, sizeOfDelayLine_3, index_3);
+
+    output += processCombFilter(buffer_4, input, -GAIN, sizeOfDelayLine_4, index_4);
+
+    output = saturation(output * 0.25); // saturation and "gain control"
+    
+    return _input + output;
 }
 
 void Ambient::Process( float* buffer, int sampleFrame){
