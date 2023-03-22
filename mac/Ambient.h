@@ -4,6 +4,7 @@
 #include <memory>
 #include <stdio.h>
 #include <cmath>
+#include <cstring>
 
 #define GAIN  0.86
 
@@ -126,25 +127,29 @@ void Ambient::initBuffer(float* (&buffer), float sizeOfDelayLine){
 float Ambient::processCombFilter(float* (&buffer), float _input, float gain, float sizeOfDelayLine, float  & index){
     
     float output = 0.0;
-    
-    int readIndex1 = (int) index;
-    
+        
+    int readIndex1 = index;
+        
     float a = index - readIndex1;
 
     int readIndex2 = readIndex1 + 1;
-    
+        
     if(readIndex2 >= sizeOfDelayLine)
         readIndex2 = 0;
-    
+        
     output = buffer[readIndex1] * (1.f - a) + buffer[readIndex2] * a;
-    
+        
     buffer[readIndex1] = _input + gain * output;
-    
+        
+    if(buffer[readIndex1] < 0.00001) // set to 0 if value is at -50dBFS
+        buffer[readIndex1] = 0.f;
+        
     index = index + 1;
+    
     if( index >= sizeOfDelayLine )
         index -= sizeOfDelayLine;
-    
-    return output;
+        
+        return output;
 }
 
 float Ambient::saturation(float _sample){

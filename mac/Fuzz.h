@@ -30,7 +30,8 @@ Fuzz::~Fuzz(){
 
 void  Fuzz::SetGain(float _gain){
     
-    gain =  pow(10.f, _gain*2); // 0 to 20 dB gain
+    gain    = pow(10.f, _gain*2); // 0 to 20 dB gain
+    invGain =  pow(10.f, -1.4 * _gain);
 }
 
 float Fuzz::GetGain(){
@@ -60,7 +61,7 @@ float Fuzz::ProcessSample(float _input){
     else
         output = 1.f;
     
-    return output * 0.7;
+    return output * invGain;
 }
 
 void  Fuzz::Process( float* buffer, int sampleFrame){

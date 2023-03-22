@@ -1,7 +1,8 @@
 #ifndef Tone_h
 #define Tone_h
 
-#define SHELF_FREQ 750
+#define SHELF_FREQ 750.0
+#define GAIN_DB 15.0
 
 #import <math.h>
 
@@ -13,9 +14,10 @@ class Tone{
     
     float lowCoeff[3];
     float highCoeff[3];
-    float c_0 = 2.9810717055;
     
     float x_n1, y_n1;
+    float c_0;
+
     int   sampleRate;
     
     public:
@@ -74,9 +76,13 @@ void  Tone::init(int _sampleRate){
     sampleRate = _sampleRate;
     
     // Coefficients based on Will C. Pirkle - Design audio effect plugin in C++
-    float delta = tan(M_PI * SHELF_FREQ/sampleRate);
+    float teta = tan(M_PI * SHELF_FREQ/sampleRate);
+    float mu = pow(10.0, GAIN_DB * 0.05);
+    c_0 = mu - 1.0;
+
     // Low shelf
-    float low_delta = delta * 0.803040035652;
+    float low_beta = 4.f / (1.f + mu);
+    float low_delta = teta * low_beta;
     float low_gamma = (1.f - low_delta)/(1.f + low_delta);
 
     lowCoeff[0] = (1.f - low_gamma) * 0.5;//a_0
@@ -84,7 +90,8 @@ void  Tone::init(int _sampleRate){
     lowCoeff[2] = -low_gamma;//b_1
    
     // High shelf
-    float high_delta = delta * 1.24526792638;
+    float high_beta = (1.f + mu)*0.25;
+    float high_delta = teta * high_beta;
     float high_gamma = (1.f - high_delta)/(1.f + high_delta);
     
     highCoeff[0] = (1.f + high_gamma) * 0.5;//a_0

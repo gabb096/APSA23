@@ -68,12 +68,15 @@ float Chorus::ProcessSample(float _input){
 
             delTime = (min[j] + delTime * depth[j] ) * (float)sampleRate * 0.001; // in samples
 
-            int readIndex1 = WriteIndex - (int) delTime;
+            int readIndex1 = WriteIndex - delTime;
 
             if( readIndex1 < 0 )
                 readIndex1 += sizeOfDelayLine;
         
-            int readIndex2 = readIndex1 <= 0 ? sizeOfDelayLine : readIndex1-1;
+            int readIndex2 = readIndex1 + 1;
+                
+            if(readIndex2 >= sizeOfDelayLine)
+                readIndex2 = 0;
             
             // Add to the output the linear interpolation with the previews sample
             float a = delTime - (int)delTime;

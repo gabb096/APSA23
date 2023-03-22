@@ -12,8 +12,8 @@ AudioEffect* createEffectInstance(audioMasterCallback audioMaster){
 Apsa23::Apsa23(audioMasterCallback audioMaster)
 : AudioEffectX(audioMaster, NUM_PROGRAMS, VDParam_NumParam)    // n program, n parameters
 {
-    setNumInputs(1);         // Stereo in
-    setNumOutputs(1);        // Stereo out
+    setNumInputs(1);         // Mono in
+    setNumOutputs(1);        // Mono out
     setUniqueID('GLAA');     // identify
     InitPlugin();
 }
@@ -32,6 +32,7 @@ void Apsa23::InitPlugin(){
 
 void Apsa23::init(float _sampleRate){
         
+    O_Fuzz.SetGain(m_Fuzz);
     O_Chorus.init( _sampleRate );
     O_Tone.init( _sampleRate );
     O_AutoTremolo.init( _sampleRate );
@@ -57,14 +58,14 @@ void Apsa23::processReplacing(float** inputs, float** outputs, VstInt32 sampleFr
     for(int i=0; i<sampleFrames; ++i)
         out[i] = in[i];
     
-    if(m_Tone != 0.5)
-        O_Tone.Process(out, sampleFrames);
-    
     if(m_Fuzz != 0.0)
         O_Fuzz.Process(out, sampleFrames);
     
     if(m_Chorus != 0.0)
         O_Chorus.Process(out, sampleFrames);
+    
+    if(m_Tone != 0.5)
+        O_Tone.Process(out, sampleFrames);
     
     if(m_Ambient != 0.0)
         O_Ambient.Process(out, sampleFrames);
@@ -74,7 +75,6 @@ void Apsa23::processReplacing(float** inputs, float** outputs, VstInt32 sampleFr
 
     // Dry/Wet
     for(int i=0; i<sampleFrames; ++i)
-        
         out[i] = in[i] * (1.f-m_DryWet) + out[i] * m_DryWet;
 
 }

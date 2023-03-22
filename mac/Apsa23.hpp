@@ -12,9 +12,10 @@
 using namespace std;
 
 enum Apsa23Param{
-    VDParam_Tone,
+    
     VDParam_Fuzz,
     VDParam_Chorus,
+    VDParam_Tone,
     VDParam_Ambient,
     VDParam_AutoTremolo,
     VDParam_DryWet,

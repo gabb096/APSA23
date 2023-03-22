@@ -1,14 +1,13 @@
 # Apsa23 VST2 plugin
 
-### English (To be completed)
-
+### English
 This plugin was created as a project for the APSA (Architectures and Algorithms for Audio Signal Processing) exam of the master's degree in Sound and Performance Engineering at the University of Rome Tor Vergata.
 
 The main idea is to create a plugin to creatively process signals from guitars, basses, synths, but also voices and complex buses.
 
 The audio chain is as follows:
 
-Tone -> Fuzz -> Chorus -> Ambient -> AutoTremolo -> Dry/Wet.
+Fuzz -> Chorus -> Tone -> AutoTremolo -> Dry/Wet.
 
 All effects are single knobs to make operation as simple and intuitive as possible.
 
@@ -33,7 +32,7 @@ x(n) & \mbox{if }\quad 0 \lt x(n) \le -1 \\
 -1 & \mbox{if }\quad x(n) \lt -1 \\
 \end{cases}$$
 
-In the interval $x(n)\in [0,3)$, $y(n)$ approximates the hyperbolic tangent in the same interval.
+For $x(n)\in [0,3)$, $y(n)$ approximates the hyperbolic tangent in the same interval.
 
 ### Chorus
 The chorus was implemented using a delay line with one write index and 4 read indexes.
@@ -43,22 +42,22 @@ Each read index has a different range of delays in which it varies.
 Once the signals are obtained from the delay line, they are summed together, attenuated and then processed through a soft clipping.
 
 ### AutoTremolo
+It is a simple tremolo where the user can change the depth parameter, while the frequency depends on the RMS value of the input signal.
 
-### Ambient
-
+### Dry/Wet
+The dry/wet parameter is simply a linear interpolation between effected signal and clean signal.
 
 
 ---
 
-### Italiano (Da completare)
-
+### Italiano
 Questo plugin è stato realizzato come progetto per l'esame di APSA (Architetture e Algoritmi per il Processamento del segnali Audio)  del master in Ingegneria del Suono e dello Spettacolo dell'Università di Roma Tor Vergata.
 
 L'idea principale è quella di creare un plugin per processare in maniera creativa segnali di chitarre, bassi, synth ma anche voci e bus complessi.
 
 La catena audio è la seguente:
 
-Tono -> Fuzz -> Chorus -> Ambiente -> AutoTremolo -> Dry/Wet
+Fuzz -> Chorus -> Tono -> AutoTremolo -> Dry/Wet
 
 Tutti gli effetti sono single knob per rendere l'utilizzo più semplice ed intuitivo possibile.
 
@@ -82,7 +81,7 @@ x(n) & \mbox{se }\quad 0 \lt x(n) \le -1 \\
 -1 & \mbox{se }\quad x(n) \lt -1 \\
 \end{cases}$$
 
-Nell'intervallo $x(n)\in [0,3)$, $y(n)$ approssima la tangente iperbolica nello stesso intervallo.
+Per $x(n)\in [0,3)$, $y(n)$ approssima la tangente iperbolica nello stesso intervallo.
 
 ### Chorus
 Il chorus è stato implementato utilizzando una linea di ritardo con un indice di scrittura e 4 indici di lettura.
@@ -92,10 +91,11 @@ Ogni indice di lettura ha un range diverso di ritardi nel quale varia.
 Una volta ottenuti i segnali dalla linea di ritardo, questi vengono sommati tra loro, attenuati e poi processati tramite un soft clipping.
 
 ### AutoTremolo
+È un semplice tremolo dove l'utente può modificare il parametro di profondità, mentre la frequenza dipende dal valore RMS del segnale in ingresso.
 
-L'auto tremolo ha come parametro modificabile la profondità, la forma è sinusoidale e la velocità dipende in qualche modo dal contenuto armonico o direttamente dal valore RMS del segnale.
+### Dry/Wet
+Il parametro di dry/wet è semplicemente una interpolazione lineare tra segnale effettato e segnale pulito.
 
-### Ambiente
 
 
 
