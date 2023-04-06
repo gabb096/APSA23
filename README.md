@@ -21,18 +21,19 @@ From 50% to 0% the low frequencies are progressively emphasized.
 
 
 ### Fuzz
-The effect is achieved by a variable gain stage of up to 20 dB, followed by asymmetric distortion and finally an attenuation stage of about 1.5 dB.
+The effect is achieved by a variable gain stage up to 20 dB, followed by two distortion stages.
+The first emulates a diode clipper with the following transfer function:
 
-The asymmetric distortion complies with the following law:
+$$ y(n) = x + 2.5 x^3$$
+
+The second, on the other hand, achieves soft clipping by approximation of the hyperbolic tangent:
 
 $$ y(n)= \begin{cases} 
-1 & \mbox{if }\quad x(n) \ge 3 \\
-\frac{27x+x^3}{27+9x^2} & \mbox{if }\quad 0 \le x(n) \lt 3 \\
-x(n) & \mbox{if }\quad 0 \lt x(n) \le -1 \\
--1 & \mbox{if }\quad x(n) \lt -1 \\
+1 & \mbox{se }\quad x(n) \ge 3 \\
+\frac{27x+x^3}{27+9x^2} & \mbox{se }\quad -3 \le x(n) \lt 3 \\
+-1 & \mbox{se }\quad x(n) \lt -3 \\
 \end{cases}$$
 
-For $x(n)\in [0,3)$, $y(n)$ approximates the hyperbolic tangent in the same interval.
 
 ### Chorus
 The chorus was implemented using a delay line with one write index and 4 read indexes.
@@ -70,18 +71,18 @@ Dal 50% al 100% si enfatizzano progressivamente le alte frequenze.
 dal 50% al 0% si enfatizzano progressivamente le basse frequenze.
 
 ### Fuzz
-L'effetto è ottenuto tramite uno stadio di guadagno variabile fino a 20 dB, seguito da una distorsione asimmetrica ed infine uno stadio di attenuazione di circa 1.5 dB.
+L'effetto è ottenuto tramite uno stadio di guadagno variabile fino a 20 dB, seguito due stadi di distorsione.
+Il primo emula un tosatore a diodi con la sequente funzione di trasferimento:
 
-La distorsione asimmetrica rispetta la seguente legge:
+$$ y(n) = x +2.5x^3$$
+
+Il secondo invece ottiene un soft clipping tramite approssimazione della tangente iperbolica:
 
 $$ y(n)= \begin{cases} 
 1 & \mbox{se }\quad x(n) \ge 3 \\
-\frac{27x+x^3}{27+9x^2} & \mbox{se }\quad 0 \le x(n) \lt 3 \\
-x(n) & \mbox{se }\quad 0 \lt x(n) \le -1 \\
--1 & \mbox{se }\quad x(n) \lt -1 \\
+\frac{27x+x^3}{27+9x^2} & \mbox{se }\quad -3 \le x(n) \lt 3 \\
+-1 & \mbox{se }\quad x(n) \lt -3 \\
 \end{cases}$$
-
-Per $x(n)\in [0,3)$, $y(n)$ approssima la tangente iperbolica nello stesso intervallo.
 
 ### Chorus
 Il chorus è stato implementato utilizzando una linea di ritardo con un indice di scrittura e 4 indici di lettura.

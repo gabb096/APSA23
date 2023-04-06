@@ -30,8 +30,8 @@ Fuzz::~Fuzz(){
 
 void  Fuzz::SetGain(float _gain){
     
-    gain    = pow(10.f, _gain*2); // 0 to 20 dB gain
-    invGain =  pow(10.f, -1.4 * _gain);
+    gain    = 112.f * ( 1.f - pow(10.f, -_gain) ); // 0 to 20 dB gain
+    invGain = (_gain * _gain +1.f ) / gain;
 }
 
 float Fuzz::GetGain(){
@@ -43,13 +43,15 @@ float Fuzz::ProcessSample(float _input){
     
     float output = 0.f;
     
+    // linear gain
     _input *= gain;
     
-    if(_input < -1.f )
-        output = -1.f;
+    // diode-ish distortion
+    _input = _input * (1.0 + 2.5 * _input * _input);
     
-    else if(_input < 0.f )
-        output = _input;
+    // soft clipping
+    if(_input < -3.f )
+        output = -1.f;
     
     else if(_input < 3 )
     {
@@ -60,6 +62,8 @@ float Fuzz::ProcessSample(float _input){
     }
     else
         output = 1.f;
+    
+    
     
     return output * invGain;
 }
