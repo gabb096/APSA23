@@ -28,7 +28,7 @@ class AutoTremolo{
 
 void  AutoTremolo::SetDepth(float _depth){
     
-    depth = _depth * 0.8;
+    depth = _depth;
 }
 
 float AutoTremolo::GetDepth(){
@@ -56,10 +56,10 @@ void  AutoTremolo::init(int _sampleRate){
     LfoCounter = 0.0;
     index      = 0;
     inv_T      = 1.f/(float)RMS_BUFFER;
-    sums       = 0.f;
+    sums       = 0.0;
     
     for(int i = 0; i < RMS_BUFFER; i++)
-        buffer[i] = 0;
+        buffer[i] = 0.f;
 }
 
 
@@ -67,15 +67,15 @@ float AutoTremolo::EnvelopeFollower(float _input){ // RMS
     
     float env = _input * _input * inv_T;
     
-    sums = sums - buffer[index] + env;
+    sums += env - buffer[index];
     buffer[index] = env;
     
     index ++;
     
-    if(index >= RMS_BUFFER)
+    if(index == RMS_BUFFER)
         index = 0;
     
-    return powf(sums, 0.5) * 2;
+    return powf(sums + 0.01, 0.5) * 2;
 }
 
 float AutoTremolo::LfoOutput(float _freq){ // Unipolar
