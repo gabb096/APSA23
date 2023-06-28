@@ -16,6 +16,9 @@
 /* Begin PBXFileReference section */
 		02115AD42940F20E007C45B0 /* Apsa23.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Apsa23.cpp; sourceTree = "<group>"; };
 		02115AD52940F20E007C45B0 /* Apsa23.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Apsa23.hpp; sourceTree = "<group>"; };
+		0296516929E99B540009F069 /* Filter.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = Filter.hpp; path = ../../APD2022/mac/Filter.hpp; sourceTree = "<group>"; };
+		02B7B3C029CDC5BC0041630E /* AmbientV2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AmbientV2.h; sourceTree = "<group>"; };
+		02B7B3C129CDF7D60041630E /* DelayLine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DelayLine.h; sourceTree = "<group>"; };
 		02F1C02C29BB414200FB9B14 /* Fuzz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Fuzz.h; sourceTree = "<group>"; };
 		02F1C02D29BB41A700FB9B14 /* Chorus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Chorus.h; sourceTree = "<group>"; };
 		02F1C02E29BB41B600FB9B14 /* AutoTremolo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AutoTremolo.h; sourceTree = "<group>"; };
@@ -102,6 +105,9 @@
 				02F1C02E29BB41B600FB9B14 /* AutoTremolo.h */,
 				02F1C02F29BB41BE00FB9B14 /* Tone.h */,
 				02F1C03029BB41C700FB9B14 /* Ambient.h */,
+				02B7B3C029CDC5BC0041630E /* AmbientV2.h */,
+				0296516929E99B540009F069 /* Filter.hpp */,
+				02B7B3C129CDF7D60041630E /* DelayLine.h */,
 			);
 			name = src;
 			sourceTree = "<group>";

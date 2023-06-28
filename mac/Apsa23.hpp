@@ -5,7 +5,7 @@
 #include "Chorus.h"
 #include "AutoTremolo.h"
 #include "Tone.h"
-#include "Ambient.h"
+#include "Filter.hpp"
 
 # define NUM_PROGRAMS 0
 
@@ -16,7 +16,6 @@ enum Apsa23Param{
     VDParam_Fuzz,
     VDParam_Chorus,
     VDParam_Tone,
-    VDParam_Ambient,
     VDParam_AutoTremolo,
     VDParam_DryWet,
     VDParam_NumParam
@@ -27,14 +26,13 @@ enum Apsa23Param{
 
 class Apsa23 : public AudioEffectX{
 
-    float m_Fuzz, m_Chorus, m_AutoTremolo, m_Ambient, m_Tone, m_DryWet;
+    float m_Fuzz, m_Chorus, m_AutoTremolo, m_Tone, m_DryWet;
     
     Fuzz O_Fuzz;
     Chorus O_Chorus;
     AutoTremolo O_AutoTremolo;
     Tone O_Tone;
-    Ambient O_Ambient;
-    
+    Filter O_LowPass;
     
     void InitPrograms();
     void InitPlugin();

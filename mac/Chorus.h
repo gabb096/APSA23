@@ -63,7 +63,7 @@ float Chorus::ProcessSample(float _input){
         // Read from delay line
         for(int j=0; j<4; j++){
           
-            // Calculate reading indexs
+            // Calculate reading index
             float delTime = 4.f * lfo * (1.f - lfo); // Phase to Sine wave
 
             delTime = (min[j] + delTime * depth[j] ) * (float)sampleRate * 0.001; // in samples
@@ -95,14 +95,11 @@ float Chorus::ProcessSample(float _input){
         if(WriteIndex >= sizeOfDelayLine)
             WriteIndex = 0;
 
-        output = _input*(1.f - amount) + saturation(output*0.25) * amount;
+    output *= 0.25; // because of 4 copies
+    
+    output = _input + amount * (output - _input);
         
-    // Clipping, just in case
-    if ( output > 1.f ) return 1.f;
-    
-    else if (output < -1.f)  return -1.f;
-    
-    else  return output;
+    return output;
 }
 
 void  Chorus::Process( float* buffer, int sampleFrame){
@@ -143,7 +140,6 @@ float Chorus::saturation(float _sample){
     }
 }
 
-// Sinusoidal lfo approximated using sin(pi*x) = 4x(1-x) in [0,1]
 float Chorus::LfoOutput(){ // Unipolar
         
     LfoCounter += LFO_FREC/(float) sampleRate;

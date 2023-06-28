@@ -54,11 +54,11 @@ float Tone::ProcessSample(float _input){
     }
     else if(amount < 0.5){
         float a = 1.f - (amount * 2.f);
-        output =  LowShelf(_input)  * a + (1.f - a) * _input;
+        output =  _input + a * (LowShelf(_input) - _input);
     }
     else {
         float a = 2.f * (amount - 0.5);
-        output =  HighShelf(_input) * a + (1.f - a) * _input;
+        output =  _input + a * (HighShelf(_input) - _input);
     }
     
     return output;

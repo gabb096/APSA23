@@ -6,7 +6,7 @@
 #include <cmath>
 #include <cstring>
 
-#define GAIN  0.86
+#define GAIN  0.96
 
 class Ambient{
 
@@ -82,6 +82,8 @@ float Ambient::ProcessSample(float _input){
 
     output = saturation(output * 0.25); // saturation and "gain control"
     
+    //output *= 0.25;
+    
     return _input + output;
 }
 
@@ -108,7 +110,7 @@ void Ambient::init(int sample_rate){
     initBuffer(buffer_3, sizeOfDelayLine_3);
     
     index_4 = 0;
-    sizeOfDelayLine_4 = 8.3 * 0.001 * sampleRate;// 4th comb filter has a 21.7 ms delay line
+    sizeOfDelayLine_4 = 12.3 * 0.001 * sampleRate;// 4th comb filter has a 21.7 ms delay line
     initBuffer(buffer_4, sizeOfDelayLine_4);
     
 }
@@ -138,7 +140,7 @@ float Ambient::processCombFilter(float* (&buffer), float _input, float gain, flo
         readIndex2 = 0;
         
     output = buffer[readIndex1] * (1.f - a) + buffer[readIndex2] * a;
-        
+           
     buffer[readIndex1] = _input + gain * output;
         
     if(buffer[readIndex1] < 0.00001) // set to 0 if value is at -50dBFS

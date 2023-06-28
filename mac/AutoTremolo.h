@@ -3,13 +3,13 @@
 
 #include <math.h>
 
-#define RMS_BUFFER 1024 //samples
+#define RMS_BUFFER 5000 //samples
 #define MAX_FREQ 20
 #define MIN_FREQ 5
 
 class AutoTremolo{
     
-    float depth, sampleRate, LfoCounter, inv_T;
+    float depth, sampleRate, LfoCounter, inv_T, freq, freq_;
     float buffer[RMS_BUFFER];
     int   index;
     float sums;
@@ -38,7 +38,13 @@ float AutoTremolo::GetDepth(){
 
 float AutoTremolo::ProcessSample(float _input, float _sideChain){
     
-    float freq = MIN_FREQ + EnvelopeFollower(_sideChain) * MAX_FREQ;
+    freq = MIN_FREQ + EnvelopeFollower(_sideChain) * MAX_FREQ; // calculate freq
+    
+    freq = freq >= 20 ? 20 : freq; // limit max freq
+    
+    // limiting frequency change
+    freq_ = (freq_ - (50*inv_T) < freq ) ? freq : freq_ - (50*inv_T);
+    
     float level = 1.0 - depth * ( 1.f - LfoOutput(freq) );
 
     return _input * level;
@@ -55,7 +61,7 @@ void  AutoTremolo::init(int _sampleRate){
     sampleRate = _sampleRate;
     LfoCounter = 0.0;
     index      = 0;
-    inv_T      = 1.f/(float)RMS_BUFFER;
+    inv_T      = 1.0/(float) RMS_BUFFER;
     sums       = 0.0;
     
     for(int i = 0; i < RMS_BUFFER; i++)
@@ -65,21 +71,23 @@ void  AutoTremolo::init(int _sampleRate){
 
 float AutoTremolo::EnvelopeFollower(float _input){ // RMS 
     
-    float env = _input * _input * inv_T;
-    
+    float env = _input *_input * 25.f;
+
     sums += env - buffer[index];
     buffer[index] = env;
-    
-    index ++;
-    
+
+     index ++;
     if(index == RMS_BUFFER)
         index = 0;
-    
-    return powf(sums + 0.01, 0.5) * 2;
+             
+    return sqrt( (sums + 1e-6) * inv_T );
 }
 
 float AutoTremolo::LfoOutput(float _freq){ // Unipolar
         
+    if(LfoCounter != LfoCounter)
+        LfoCounter = 0.f;
+    
     LfoCounter += _freq/(float) sampleRate;
     
     if(LfoCounter > 1.f)

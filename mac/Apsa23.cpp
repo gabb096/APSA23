@@ -23,7 +23,6 @@ void Apsa23::InitPlugin(){
     m_Fuzz        = 0.1;
     m_Chorus      = 0.0;
     m_AutoTremolo = 0.0;
-    m_Ambient     = 0.0;
     m_Tone        = 0.5;
     m_DryWet      = 1.0;
     
@@ -33,10 +32,13 @@ void Apsa23::InitPlugin(){
 void Apsa23::init(float _sampleRate){
         
     O_Fuzz.SetGain(m_Fuzz);
+    
+    O_LowPass.InitFilter(_sampleRate, 4500, FilterType_lp);
+    O_LowPass.setQ(0.9);
+    
     O_Chorus.init( _sampleRate );
     O_Tone.init( _sampleRate );
     O_AutoTremolo.init( _sampleRate );
-    O_Ambient.init( _sampleRate );
 }
 
 void Apsa23::setSampleRate (float _sampleRate){
@@ -53,13 +55,19 @@ void Apsa23::processReplacing(float** inputs, float** outputs, VstInt32 sampleFr
     // PROCESS SINGLE PRECISION
     float *in  = inputs[0];  // buffer input
     float *out = outputs[0]; // buffer output
+    float sideChain[sampleFrames];
     
     // Copy input samples in the output buffer
-    for(int i=0; i<sampleFrames; ++i)
+    for(int i=0; i<sampleFrames; ++i){
         out[i] = in[i];
+        sideChain[i] = in[i];
+    }
+        
     
-    if(m_Fuzz != 0.0)
+    if(m_Fuzz != 0.0){
         O_Fuzz.Process(out, sampleFrames);
+        O_LowPass.Process(out, out, sampleFrames);
+    }
     
     if(m_Chorus != 0.0)
         O_Chorus.Process(out, sampleFrames);
@@ -67,15 +75,12 @@ void Apsa23::processReplacing(float** inputs, float** outputs, VstInt32 sampleFr
     if(m_Tone != 0.5)
         O_Tone.Process(out, sampleFrames);
     
-    if(m_Ambient != 0.0)
-        O_Ambient.Process(out, sampleFrames);
-    
     if(m_AutoTremolo != 0.0)
-        O_AutoTremolo.Process(out, in, sampleFrames);
+        O_AutoTremolo.Process(out, sideChain, sampleFrames);
 
     // Dry/Wet
     for(int i=0; i<sampleFrames; ++i)
-        out[i] = in[i] * (1.f-m_DryWet) + out[i] * m_DryWet;
+        out[i] = in[i] + m_DryWet * (out[i] -in[i]);
 
 }
 
@@ -97,11 +102,6 @@ void Apsa23::setParameter (VstInt32 index, float value)
         case VDParam_AutoTremolo:
             m_AutoTremolo = value;
             O_AutoTremolo.SetDepth( m_AutoTremolo );
-            break;
-            
-        case VDParam_Ambient:
-            m_Ambient = value;
-            O_Ambient.SetAmount( m_Ambient );
             break;
             
         case VDParam_Tone:
@@ -135,10 +135,6 @@ float Apsa23::getParameter (VstInt32 index)
             toReturn = m_AutoTremolo;
             break;
             
-        case VDParam_Ambient:
-            toReturn = m_Ambient;
-            break;
-            
         case VDParam_Tone:
             toReturn = m_Tone;
             break;
@@ -169,11 +165,7 @@ void Apsa23::getParameterLabel (VstInt32 index, char* label)
         case VDParam_AutoTremolo:
             vst_strncpy(label, "", kVstMaxParamStrLen);
             break;
-            
-        case VDParam_Ambient:
-            vst_strncpy(label, "", kVstMaxParamStrLen);
-            break;
-            
+
         case VDParam_Tone:
             vst_strncpy(label, "", kVstMaxParamStrLen);
             break;
@@ -210,13 +202,6 @@ void Apsa23::getParameterDisplay (VstInt32 index, char* text)
                 vst_strncpy( text, "ByPass", kVstMaxParamStrLen);
             else
                 int2string(m_AutoTremolo*100, text, kVstMaxParamStrLen);
-            break;
-        
-        case VDParam_Ambient:
-            if(m_Ambient == 0)
-                vst_strncpy( text, "ByPass", kVstMaxParamStrLen);
-            else
-                int2string( m_Ambient*100, text, kVstMaxParamStrLen);
             break;
         
         case VDParam_Tone:
@@ -257,10 +242,6 @@ void Apsa23::getParameterName (VstInt32 index, char* text)
             
         case VDParam_AutoTremolo:
             vst_strncpy(text, "A-Trem", kVstMaxParamStrLen);
-            break;
-            
-        case VDParam_Ambient:
-            vst_strncpy(text, "Ambi", kVstMaxParamStrLen);
             break;
             
         case VDParam_Tone:
